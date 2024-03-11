@@ -64,3 +64,10 @@ def order_completed(order : Order):
         time.sleep(5)
         order.status = 'completed'
         order.save()
+        redis.xadd('order_completed' , order.dict() , '*')
+
+
+@app.get('/orders/{pk}')
+def get(pk: str):
+     redis.xadd('refund_order' , [] , '*')
+     return Order.get(pk)
